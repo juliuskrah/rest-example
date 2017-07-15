@@ -1,11 +1,13 @@
 package com.juliuskrah;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Path("/api/v1.0/resources")
@@ -30,5 +32,33 @@ public class ResourceService {
     @GET
     public List<Resource> getResources() {
         return resources;
+    }
+
+    @GET
+    @Path("{id: [0-9]+}")
+    public Resource getResource(@PathParam("id") Long id) {
+        Resource resource = new Resource(id, null, null, null);
+
+        int index = Collections.binarySearch(resources, resource, Comparator.comparing(Resource::getId));
+
+        if (index >= 0)
+            return resources.get(index);
+        else
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+    }
+
+    @POST
+    public Response createResource(Resource resource) {
+        int index = Collections.binarySearch(resources, resource, Comparator.comparing(Resource::getId));
+
+        if (index < 0) {
+            resource.setCreatedTime(LocalDateTime.now());
+            resources.add(resource);
+            return Response
+                    .status(Response.Status.CREATED)
+                    .location(URI.create(String.format("/api/v1.0/resources/%s", resource.getId())))
+                    .build();
+        } else
+            throw new WebApplicationException(Response.Status.CONFLICT);
     }
 }
