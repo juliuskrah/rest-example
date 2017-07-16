@@ -66,4 +66,14 @@ public class Resource {
     public void setModifiedTime(LocalDateTime modifiedTime) {
         this.modifiedTime = modifiedTime;
     }
+
+    @Override
+    public String toString() {
+        return "Resource{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", createdTime=" + createdTime +
+                ", modifiedTime=" + modifiedTime +
+                '}';
+    }
 }
