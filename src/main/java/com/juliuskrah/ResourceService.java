@@ -60,6 +60,7 @@ public class ResourceService {
     }
 
     @POST
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response createResource(Resource resource) {
         if (Objects.isNull(resource.getId()))
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
@@ -80,6 +81,7 @@ public class ResourceService {
 
     @PUT
     @Path("{id: [0-9]+}")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response updateResource(@PathParam("id") Long id, Resource resource) {
         resource.setId(id);
         int index = Collections.binarySearch(resources, resource, Comparator.comparing(Resource::getId));
