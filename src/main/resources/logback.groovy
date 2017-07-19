@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 def PATH = System.getProperty("user.home")
-def fileName = "jersey"
+def fileName = "spring"
 // always a good idea to add an on console status listener
 statusListener(OnConsoleStatusListener)
 
