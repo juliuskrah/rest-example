@@ -20,7 +20,7 @@ statusListener(OnConsoleStatusListener)
 
 appender("CONSOLE", ConsoleAppender) {
     encoder(PatternLayoutEncoder) {
-        pattern = "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} U:%X{username} - %msg%n"
+        pattern = "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
     }
 }
 
