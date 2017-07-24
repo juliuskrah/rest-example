@@ -17,6 +17,8 @@ package com.juliuskrah;
 
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+
+import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -31,5 +33,12 @@ public class Application {
     @Bean
     public Module jaxbAnnotation() {
         return new JaxbAnnotationModule();
+    }
+
+    @Bean
+    public ResourceConfig jerseyConfig() {
+        ResourceConfig config = new ResourceConfig();
+        config.register(ResourceService.class);
+        return config;
     }
 }

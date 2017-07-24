@@ -15,19 +15,26 @@
 */
 package com.juliuskrah;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.stereotype.Component;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.*;
+import javax.ws.rs.PathParam;
 
-@RestController
-@RequestMapping(path = "/api/v1.0/resources", produces = {
-        MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+
+@Component
+@Path("/api/v1.0/resources")
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class ResourceService {
 
     private static List<Resource> resources = null;
@@ -46,49 +53,44 @@ public class ResourceService {
         resources.add(new Resource(10L, "Resource Ten", LocalDateTime.now(), null));
     }
 
-    @GetMapping
+    @GET
     public List<Resource> getResources() {
         return resources;
     }
 
-    @GetMapping("{id:[0-9]+}")
-    public ResponseEntity<Resource> getResource(@PathVariable Long id) {
+    @GET
+    @Path("{id: [0-9]+}")
+    public Resource getResource(@PathParam("id") Long id) {
         Resource resource = new Resource(id, null, null, null);
+
         int index = Collections.binarySearch(resources, resource, Comparator.comparing(Resource::getId));
 
         if (index >= 0)
-            return ResponseEntity
-                    .ok(resources.get(index));
+            return resources.get(index);
         else
-            return ResponseEntity
-                    .notFound()
-                    .build();
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
 
-    @PostMapping
-    public ResponseEntity<Void> createResource(@RequestBody Resource resource, UriComponentsBuilder b) {
+    @POST
+    public Response createResource(Resource resource) {
         if (Objects.isNull(resource.getId()))
-            return ResponseEntity
-                    .badRequest()
-                    .build();
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
         int index = Collections.binarySearch(resources, resource, Comparator.comparing(Resource::getId));
 
         if (index < 0) {
             resource.setCreatedTime(LocalDateTime.now());
             resources.add(resource);
-            UriComponents uriComponents = b.path("/api/v1.0/resources/{id}")
-                    .buildAndExpand(resource.getId());
-            return ResponseEntity
-                    .created(uriComponents.toUri())
+            return Response
+                    .status(Response.Status.CREATED)
+                    .location(URI.create(String.format("/api/v1.0/resources/%s", resource.getId())))
                     .build();
         } else
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .build();
+            throw new WebApplicationException(Response.Status.CONFLICT);
     }
 
-    @PutMapping("{id:[0-9]+}")
-    public ResponseEntity<Void> updateResource(@PathVariable Long id, @RequestBody Resource resource) {
+    @PUT
+    @Path("{id: [0-9]+}")
+    public Response updateResource(@PathParam("id") Long id, Resource resource) {
         resource.setId(id);
         int index = Collections.binarySearch(resources, resource, Comparator.comparing(Resource::getId));
 
@@ -97,28 +99,25 @@ public class ResourceService {
             updatedResource.setModifiedTime(LocalDateTime.now());
             updatedResource.setDescription(resource.getDescription());
             resources.set(index, updatedResource);
-            return ResponseEntity
-                    .noContent()
+            return Response
+                    .status(Response.Status.NO_CONTENT)
                     .build();
         } else
-            return ResponseEntity
-                    .notFound()
-                    .build();
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
 
-    @DeleteMapping("{id:[0-9]+}")
-    public ResponseEntity<Void> deleteResource(@PathVariable Long id) {
+    @DELETE
+    @Path("{id: [0-9]+}")
+    public Response deleteResource(@PathParam("id") Long id) {
         Resource resource = new Resource(id, null, null, null);
         int index = Collections.binarySearch(resources, resource, Comparator.comparing(Resource::getId));
 
         if (index >= 0) {
             resources.remove(index);
-            return ResponseEntity
-                    .noContent()
+            return Response
+                    .status(Response.Status.NO_CONTENT)
                     .build();
         } else
-            return ResponseEntity
-                    .notFound()
-                    .build();
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
 }
