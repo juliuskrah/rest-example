@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@XmlRootElement(name = "resource")
+@XmlRootElement
 public class Resource {
     private Long id;
     private String description;
