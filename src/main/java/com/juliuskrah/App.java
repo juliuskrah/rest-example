@@ -23,10 +23,13 @@ import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Objects;
+import java.util.Optional;
 
 public class App {
     public static void main(String... cmd) throws IOException, InterruptedException {
-        int port = Objects.nonNull(System.getenv("PORT")) ? Integer.valueOf(System.getenv("PORT")) : 8080;
+        int port = Integer.valueOf(Optional.ofNullable(System.getenv("PORT")).orElse("9999"));
+        // Objects.nonNull() ? Integer.valueOf(System.getenv("PORT")) : 8080;
+    
         URI baseUri = UriBuilder.fromUri("http://localhost/").port(port).build();
         ResourceConfig resourceConfig = new ResourceConfig().packages("com.juliuskrah");
         NettyHttpContainerProvider.createServer(baseUri, resourceConfig, false);
