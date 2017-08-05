@@ -28,7 +28,6 @@ import java.util.Optional;
 public class App {
     public static void main(String... cmd) throws IOException, InterruptedException {
         int port = Integer.valueOf(Optional.ofNullable(System.getenv("PORT")).orElse("9999"));
-        // Objects.nonNull() ? Integer.valueOf(System.getenv("PORT")) : 8080;
     
         URI baseUri = UriBuilder.fromUri("http://localhost/").port(port).build();
         ResourceConfig resourceConfig = new ResourceConfig().packages("com.juliuskrah");
