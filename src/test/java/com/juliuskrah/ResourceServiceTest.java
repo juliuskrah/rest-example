@@ -15,6 +15,7 @@
 */
 package com.juliuskrah;
 
+import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -25,18 +26,11 @@ import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_XML;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.http.MediaType.APPLICATION_XML_VALUE;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -50,16 +44,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class ResourceServiceTest {
 	@Autowired
 	private TestRestTemplate restTemplate;
-	private MockMvc restMvc;
 	@LocalServerPort
 	private int port; // Added for RestAssured tests
 
@@ -75,19 +68,18 @@ public class ResourceServiceTest {
 		assertThat(resources).isNotEmpty();
 		assertThat(response.getStatusCode()).isSameAs(OK);
 		assertThat(resources).hasOnlyElementsOfType(Resource.class);
-		// assertThat(resources).asList().isSorted();
-		// assertThat(resources).hasSize(10);
 	}
 
-	// @Test
-	public void testGetResourcesMock() throws Exception {
+	@Test
+	public void testGetResourcesRestAssured() throws Exception {
 		// @formatter:off
-		this.restMvc.perform(get("/api/v1.0/resources/")
-				.accept(APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$[0].id").value(1))
-				.andExpect(jsonPath("$[*].id", hasItems(1, 3, 8)))
-				.andExpect(jsonPath("$[*].description", hasItems("Resource Three", "Resource Four")));
+		given()
+			.port(this.port)
+		.when()
+			.get("/api/v1.0/resources")
+		.then()
+			.body("findAll { it.id < 10 }.description", 
+				hasItems("Resource Two", "Resource Five", "Resource Six", "Resource Seven"));
 		// @formatter:on
 	}
 
@@ -99,12 +91,15 @@ public class ResourceServiceTest {
 		assertThat(resource.getDescription()).isEqualTo("Resource Two");
 	}
 
-	// @Test
+	@Test
 	public void testGetResourceIsNotFound() throws Exception {
 		// @formatter:off
-		this.restMvc.perform(get("/api/v1.0/resources/{id}", 11L)
-				.accept(APPLICATION_XML))
-				.andExpect(status().isNotFound());
+		given()
+			.port(this.port)
+		.when()
+			.get("/api/v1.0/resources/{id}", 45L)
+		.then()
+			.assertThat().statusCode(NOT_FOUND.value());
 		// @formatter:on
 	}
 
@@ -128,29 +123,36 @@ public class ResourceServiceTest {
 		assertThat(response.getStatusCode()).isSameAs(BAD_REQUEST);
 	}
 
-	// @Test
+	@Test
 	public void testCreateResourceIsCreated() throws IOException, Exception {
 		// @formatter:off
 		Resource resource = new Resource(87L, "Reource Eighty-Seven", LocalDateTime.now(), null);
 
-		this.restMvc.perform(post("/api/v1.0/resources")
-				.contentType(APPLICATION_JSON)
-				.content(TestUtil.convertObjectToJsonBytes(resource)))
-				.andExpect(status().isCreated())
-				.andExpect(header().string("location", containsString(String.format("/api/v1.0/resources/%s", resource.getId()))));
+		given()
+			.port(this.port)
+			.contentType(APPLICATION_XML_VALUE)
+			.body(resource)
+		.when()
+			.post("/api/v1.0/resources")
+		.then()
+			.statusCode(CREATED.value())
+			.header(HttpHeaders.LOCATION, containsString(String.format("/api/v1.0/resources/%s", resource.getId())));
 		// @formatter:on
 	}
 
-	// @Test
+	@Test
 	public void testUpdateResourceIsNoContent() throws IOException, Exception {
 		// @formatter:off
 		Resource resource = new Resource(null, "Reource Three Updated", LocalDateTime.now(), null);
 		
-		this.restMvc.perform(put("/api/v1.0/resources/{id}", 3L)
-				.accept(APPLICATION_JSON)
-				.contentType(APPLICATION_JSON)
-				.content(TestUtil.convertObjectToJsonBytes(resource)))
-				.andExpect(status().isNoContent());	
+		given()
+			.port(this.port)
+			.contentType(APPLICATION_XML_VALUE)
+			.body(resource)
+		.when()
+			.put("/api/v1.0/resources/{id}", 3L)
+		.then()
+			.statusCode(NO_CONTENT.value());
 		// @formatter:off
 	}
 
@@ -164,12 +166,16 @@ public class ResourceServiceTest {
 		assertThat(response.getStatusCode()).isSameAs(NOT_FOUND);
 	}
 	
-//	@Test 
+	@Test 
 	public void testDeleteResourceIsNotFound() throws Exception {
 		// @formatter:off				
-		this.restMvc.perform(delete("/api/v1.0/resources/{id}", 34L)
-				.accept(APPLICATION_JSON))
-				.andExpect(status().isNotFound());
+		given()
+			.port(this.port)
+			.accept(APPLICATION_XML_VALUE)
+		.when()
+			.delete("/api/v1.0/resources/{id}", 34L)
+		.then()
+			.statusCode(NOT_FOUND.value());
 		// @formatter:off	
 	}
 	
