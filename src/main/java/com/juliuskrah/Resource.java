@@ -18,16 +18,24 @@ package com.juliuskrah;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDateTime;
 
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @XmlRootElement(name = "resource")
 public class Resource {
+    @Id
+    @GeneratedValue
     private Long id;
+    @NotEmpty
     private String description;
     private LocalDateTime createdTime;
     private LocalDateTime modifiedTime;
