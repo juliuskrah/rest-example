@@ -108,18 +108,8 @@ public class ResourceServiceTest {
 	}
 
 	@Test
-	public void testCreateResourceIsConflict() {
-		Resource resource = new Resource(2L, "Reource Two Conflict", LocalDateTime.now(), null);
-		HttpEntity<Resource> entity = new HttpEntity<>(resource);
-		ResponseEntity<Void> response = this.restTemplate.exchange("/api/v1.0/resources", POST, entity, Void.class);
-
-		assertThat(response).isNotNull();
-		assertThat(response.getStatusCode()).isSameAs(CONFLICT);
-	}
-
-	@Test
 	public void testCreateResourceIsBadRequest() {
-		Resource resource = new Resource(null, "Reource Two Conflict", LocalDateTime.now(), null);
+		Resource resource = new Resource(48L, "Reource Two Conflict", LocalDateTime.now(), null);
 		HttpEntity<Resource> entity = new HttpEntity<>(resource);
 		ResponseEntity<Void> response = this.restTemplate.exchange("/api/v1.0/resources", POST, entity, Void.class);
 
@@ -130,13 +120,13 @@ public class ResourceServiceTest {
 	@Test
 	public void testCreateResourceIsCreated() throws IOException, Exception {
 		// @formatter:off
-		Resource resource = new Resource(87L, "Reource Eighty-Seven", LocalDateTime.now(), null);
+		Resource resource = new Resource(null, "Reource Eighty-Seven", LocalDateTime.now(), null);
 
 		this.restMvc.perform(post("/api/v1.0/resources")
 				.contentType(APPLICATION_JSON)
 				.content(TestUtil.convertObjectToJsonBytes(resource)))
 				.andExpect(status().isCreated())
-				.andExpect(header().string("location", containsString(String.format("/api/v1.0/resources/%s", resource.getId()))));
+				.andExpect(header().string("location", containsString("/api/v1.0/resources/")));
 		// @formatter:on
 	}
 
