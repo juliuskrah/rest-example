@@ -15,7 +15,6 @@
 */
 package com.juliuskrah;
 
-import com.sun.org.apache.regexp.internal.RE;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,8 +54,8 @@ class ResourceService {
     }
 
     @GetMapping
-    List<Resource> getResources() {
-        return personRepository.findAll();
+    Iterable<Resource> getResources() {
+        return personRepository.findAll(QResource.resource.id.isNotNull());
     }
 
     /**
