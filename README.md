@@ -3,6 +3,8 @@
 # REST Example for Java
 Simple REST repository to accompany my REST series
 
+<http://juliuskrah.com/tutorial/2017/07/16/developing-restful-services-with-jax-rs-jersey/>
+
 
 # Quickstart
 ```bash
