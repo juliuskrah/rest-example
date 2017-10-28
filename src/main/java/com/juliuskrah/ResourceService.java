@@ -103,6 +103,7 @@ class ResourceService {
         return Optional.ofNullable(managedResource)
                 .map(r -> {
                     resource.setId(managedResource.getId());
+                    resource.setModifiedTime(LocalDateTime.now());
                     personRepository.save(resource);
                     return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
                 })
