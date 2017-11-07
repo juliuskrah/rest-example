@@ -31,30 +31,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         } catch (Exception e) {
             throw new BeanInitializationException("Security configuration failed", e);
         }
-    } 
+    }
 
     @Override
-	protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
         http
-            .addFilterBefore(new JWTAuthenticationFilter(
-                    "/api/authenticate", this.tokenProvider, authenticationManager()),
-                UsernamePasswordAuthenticationFilter.class)
-            .exceptionHandling()
-            .authenticationEntryPoint(new JWTAuthenticationEntryPoint())
-            .accessDeniedHandler(new JWTAccessDeniedHandler())
-        .and()
-            .csrf()
-            .disable()
-            .headers()
-            .frameOptions()
-            .disable()
-        .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-            .authorizeRequests().anyRequest().authenticated()
-        .and()
-            .apply(securityConfigurerAdapter());
+                .addFilterBefore(new JWTAuthenticationFilter(
+                                "/api/authenticate", this.tokenProvider, authenticationManager()),
+                        UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling()
+                .authenticationEntryPoint(new JWTAuthenticationEntryPoint())
+                .accessDeniedHandler(new JWTAccessDeniedHandler())
+                .and()
+                .csrf()
+                .disable()
+                .headers()
+                .frameOptions()
+                .disable()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests().anyRequest().authenticated()
+                .and()
+                .apply(securityConfigurerAdapter());
     }
 
     private JWTConfigurer securityConfigurerAdapter() {

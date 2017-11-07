@@ -28,9 +28,9 @@ public class JWTAuthenticationFilter extends AbstractAuthenticationProcessingFil
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
+        // Content-Type: application/x-www-form-urlencoded
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        System.out.println(username + ":" + password);
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
 
@@ -41,8 +41,9 @@ public class JWTAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                            FilterChain chain, Authentication authentication) throws IOException, ServletException {
+                                            FilterChain filterChain, Authentication authentication) throws IOException, ServletException {
         String jwt = tokenProvider.createToken(authentication);
         response.addHeader(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        // filterChain.doFilter(request, response); Do not continue chain; End the chain
     }
 }

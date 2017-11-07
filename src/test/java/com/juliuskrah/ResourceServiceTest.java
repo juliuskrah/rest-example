@@ -86,7 +86,7 @@ public class ResourceServiceTest {
 
     @Test
     @WithMockUser
-    public void testCreateResourceIsBadRequest() throws  Exception{
+    public void testCreateResourceIsBadRequest() throws Exception {
         Resource resource = new Resource(null, "Reource Two Bad Request", LocalDateTime.now(), null);
         this.restMvc.perform(post("/api/v1.0/resources")
                 .contentType(APPLICATION_JSON)
@@ -127,7 +127,7 @@ public class ResourceServiceTest {
     @WithMockUser
     public void testUpdateResourceIsNotFound() throws Exception {
         Resource resource = new Resource(null, "Reource Twenty Updated", LocalDateTime.now(), null);
-      this.restMvc.perform(put("/api/v1.0/resources/{id}", 20L)
+        this.restMvc.perform(put("/api/v1.0/resources/{id}", 20L)
                 .accept(APPLICATION_JSON)
                 .contentType(APPLICATION_JSON)
                 .content(TestUtil.convertObjectToJsonBytes(resource)))

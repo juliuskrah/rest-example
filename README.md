@@ -1,7 +1,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![CircleCI](https://circleci.com/gh/juliuskrah/rest-example/tree/spring-jwt.svg?style=svg)](https://circleci.com/gh/juliuskrah/rest-example/tree/spring-jwt)
 # REST Example for Java using Spring Security
-Simple REST repository to accompany my [REST series](http://juliuskrah.com/tutorial/2017/07/23/developing-restful-services-with-spring/).
+Simple REST repository to accompany my [REST series](http://juliuskrah.com/tutorial/2017/11/07/securing-a-spring-rest-service-with-jwt/).
 
 I have implemented REST security using JWT with Spring
 
@@ -10,5 +10,7 @@ For demonstration purposes this example stores resources in memory. If you are l
 
 # Quickstart
 ```bash
-mvnw clean spring-boot:run
+> git clone https://github.com/juliuskrah/rest-example.git -b spring-jwt
+> cd rest-example
+> ./mvnw clean spring-boot:run
 ```
