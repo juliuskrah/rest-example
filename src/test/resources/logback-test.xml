@@ -9,7 +9,7 @@
 
     <logger name="com.juliuskrah" level="warn"/>
 
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>
 

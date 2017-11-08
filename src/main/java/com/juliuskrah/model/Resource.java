@@ -13,21 +13,22 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.juliuskrah;
+package com.juliuskrah.model;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
-public class LocalDateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
-
-    @Override
-    public LocalDateTime unmarshal(String dateInput) {
-        return LocalDateTime.parse(dateInput, DateTimeFormatter.ISO_DATE_TIME);
-    }
-
-    @Override
-    public String marshal(LocalDateTime localDateTime) {
-        return DateTimeFormatter.ISO_DATE_TIME.format(localDateTime);
-    }
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@XmlRootElement
+public class Resource {
+    private Long id;
+    private String description;
+    private LocalDateTime createdTime;
+    private LocalDateTime modifiedTime;
 }

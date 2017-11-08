@@ -33,5 +33,5 @@ appender("ROLLING", RollingFileAppender) {
     }
 }
 
-logger("com.juliuskrah", DEBUG)
-root(DEBUG, ["ROLLING", "CONSOLE"])
+logger("com.juliuskrah", INFO)
+root(ERROR, ["ROLLING", "CONSOLE"])

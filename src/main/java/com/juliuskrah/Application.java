@@ -15,6 +15,7 @@
 */
 package com.juliuskrah;
 
+import com.juliuskrah.web.ResourceService;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

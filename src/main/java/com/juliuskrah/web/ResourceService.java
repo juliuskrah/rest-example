@@ -13,8 +13,10 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.juliuskrah;
+package com.juliuskrah.web;
 
+import com.juliuskrah.model.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import javax.ws.rs.PathParam;
 
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.DELETE;
@@ -31,7 +34,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.SecurityContext;
 
+@Slf4j
 @Component
 @Path("/api/v1.0/resources")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -60,7 +65,8 @@ public class ResourceService {
      * @return the {@code List<Resource>} of resources with status code 200 (OK)
      */
     @GET
-    public List<Resource> getResources() {
+    public List<Resource> getResources(@Context SecurityContext context) {
+        log.info("{} was here.", context.getUserPrincipal().getName());
         return resources;
     }
 

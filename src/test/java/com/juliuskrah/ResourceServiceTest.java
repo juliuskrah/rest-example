@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.juliuskrah.model.Resource;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,12 +64,12 @@ public class ResourceServiceTest {
 				new ParameterizedTypeReference<List<Resource>>() {
 				});
 
-		assertThat(response.getBody()).isNotNull();
+		Assertions.assertThat(response.getBody()).isNotNull();
 		List<Resource> resources = response.getBody();
 
-		assertThat(resources).isNotEmpty();
+		Assertions.assertThat(resources).isNotEmpty();
 		assertThat(response.getStatusCode()).isSameAs(OK);
-		assertThat(resources).hasOnlyElementsOfType(Resource.class);
+		Assertions.assertThat(resources).hasOnlyElementsOfType(Resource.class);
 	}
 
 	@Test
