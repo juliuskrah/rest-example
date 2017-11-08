@@ -18,6 +18,7 @@ package com.juliuskrah;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ import java.time.LocalDateTime;
 @XmlRootElement(name = "resource")
 public class Resource {
     private Long id;
+    @NotEmpty
     private String description;
     private LocalDateTime createdTime;
     private LocalDateTime modifiedTime;

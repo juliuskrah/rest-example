@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -66,7 +67,7 @@ public class ResourceService {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createResource(@RequestBody Resource resource, UriComponentsBuilder b) {
+    public ResponseEntity<Void> createResource(@Valid @RequestBody Resource resource, UriComponentsBuilder b) {
         if (Objects.isNull(resource.getId()))
             return ResponseEntity
                     .badRequest()

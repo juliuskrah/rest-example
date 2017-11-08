@@ -6,22 +6,26 @@ import com.juliuskrah.security.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 import javax.annotation.PostConstruct;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Import(SecurityProblemSupport.class)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationManagerBuilder auth;
     private final TokenProvider tokenProvider;
+    private final SecurityProblemSupport problemSupport;
 
     @PostConstruct
     public void init() {
@@ -40,8 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 "/api/authenticate", this.tokenProvider, authenticationManager()),
                         UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
-                .authenticationEntryPoint(new JWTAuthenticationEntryPoint())
-                .accessDeniedHandler(new JWTAccessDeniedHandler())
+                .authenticationEntryPoint(problemSupport)
+                .accessDeniedHandler(problemSupport)
                 .and()
                 .csrf()
                 .disable()
