@@ -1,12 +1,15 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![CircleCI](https://circleci.com/gh/juliuskrah/rest-example/tree/jersey-spring.svg?style=svg)](https://circleci.com/gh/juliuskrah/rest-example/tree/jersey-spring)
-# REST Example for Java using Spring and Jersey
-Simple REST repository to accompany my [REST series](http://juliuskrah.com/tutorial/2017/07/26/developing-restful-services-with-spring-and-jersey/)
+[![CircleCI](https://circleci.com/gh/juliuskrah/rest-example/tree/jersey-spring-jwt.svg?style=svg)](https://circleci.com/gh/juliuskrah/rest-example/tree/jersey-spring-jwt)
+# REST Example for Java using Spring and Jersey (JWT)
+Simple REST repository to accompany my [REST series](http://juliuskrah.com/tutorial/2017/07/26/developing-restful-services-with-spring-and-jersey/).  
+The code in this repository has been augmented with Spring Security and JWT
 
 
 # Quickstart
 ```bash
-mvnw clean spring-boot:run
+> git clone https://github.com/juliuskrah/rest-example.git -b jersey-spring-jwt
+> cd rest-example
+> mvnw clean spring-boot:run
 ```
 
 Highlights
