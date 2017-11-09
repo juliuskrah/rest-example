@@ -14,3 +14,6 @@ For demonstration purposes this example stores resources in memory. If you are l
 > cd rest-example
 > ./mvnw clean spring-boot:run
 ```
+
+If you are looking for how to implement JWT security in a Jersey Spring based
+project checkout the [jersey-spring-jwt](https://github.com/juliuskrah/rest-example/tree/jersey-spring-jwt) branch
